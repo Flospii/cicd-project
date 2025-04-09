@@ -158,4 +158,43 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getProduct).Methods("GET")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
+	a.Router.HandleFunc("/health", a.healthCheck).Methods("GET")
+	a.Router.HandleFunc("/products/count", a.countProducts).Methods("GET")
+	a.Router.HandleFunc("/product/name/{name}", a.getProductByName).Methods("GET")
+}
+
+func (a *App) getProductByName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
+
+	p := product{Name: name}
+	if err := p.getProductByName(a.DB); err != nil {
+		switch err {
+		case sql.ErrNoRows:
+			respondWithError(w, http.StatusNotFound, "Product not found")
+		default:
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, p)
+}
+
+func (p *product) getProductByName(db *sql.DB) error {
+	return db.QueryRow("SELECT * FROM products WHERE name=$1", p.Name).Scan(&p.ID, &p.Name, &p.Price)
+}
+
+func (a *App) healthCheck(w http.ResponseWriter, r *http.Request) {
+	respondWithJSON(w, http.StatusOK, map[string]string{"status": "OK"})
+}
+
+func (a *App) countProducts(w http.ResponseWriter, r *http.Request) {
+	var count int
+	err := a.DB.QueryRow("SELECT count(*) FROM products").Scan(&count)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, map[string]int{"count": count})
 }
