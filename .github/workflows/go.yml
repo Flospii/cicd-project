@@ -1,0 +1,33 @@
+name: Go CI Workflow
+
+on:
+  push:
+    branches: [main] # Ändere ggf. den Branch-Namen
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Code aus dem Repository holen
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Go einrichten
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.16" # Passe die Go-Version ggf. an
+
+      # Abhängigkeiten installieren
+      - name: Install dependencies
+        run: go mod download
+
+      # Unit-Tests ausführen
+      - name: Run tests
+        run: go test -v ./...
+
+      # Build-Schritt (optional: passe diesen an dein Projekt an)
+      - name: Build application
+        run: go build -o myapp .
