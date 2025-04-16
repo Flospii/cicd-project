@@ -21,10 +21,7 @@ jobs:
         ports:
           - 5432:5432 # Expose port 5432 to the host
         options: >-
-          --health-cmd "pg_isready -U postgres"   # Command to check when PostgreSQL is ready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
 
     # Set environment variables for the application initialization
     env:
