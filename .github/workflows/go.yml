@@ -52,19 +52,19 @@ jobs:
       - name: Build application
         run: go build -o myapp .
 
-sonarcloud:
-  runs-on: ubuntu-latest
-  needs: test
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+  sonarcloud:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      with:
-        args: >
-          -Dsonar.organization=your-organization
-          -Dsonar.projectKey=your-project-key
-          -Dsonar.sources=.
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.organization=your-organization
+            -Dsonar.projectKey=your-project-key
+            -Dsonar.sources=.
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
