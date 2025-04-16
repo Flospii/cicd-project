@@ -9,6 +9,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # Define PostgreSQL as a service container
+    services:
+      postgres:
+        image: postgres:13 # Using PostgreSQL image version 13
+        env:
+          POSTGRES_DB: flospi # Name of the PostgreSQL database
+          POSTGRES_USER: flospi # PostgreSQL username
+          POSTGRES_PASSWORD: Test.123 # PostgreSQL password
+        ports:
+          - 5432:5432 # Expose port 5432 to the host
+        options: >-
+          --health-cmd "pg_isready -U postgres"   # Command to check when PostgreSQL is ready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # Set environment variables for the application initialization
+    env:
+      APP_DB_USERNAME: flospi # Application DB username
+      APP_DB_PASSWORD: Test.123 # Application DB password
+      APP_DB_NAME: flospi # Application DB name
+
     steps:
       # Get code from the repository
       - name: Checkout code
