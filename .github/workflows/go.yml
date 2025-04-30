@@ -106,7 +106,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: image # only the image
-          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: flospi/cicd-go-app:latest
           format: table
           exit-code: "1" # fail on HIGH or CRITICAL
           severity: CRITICAL,HIGH
