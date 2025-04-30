@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sonarqube # ensure tests & Sonar have passed
     env:
-      IMAGE_NAME: flospii/cicd-go-app
+      IMAGE_NAME: flospi/cicd-go-app
 
     steps:
       - name: Checkout code
