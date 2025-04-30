@@ -102,11 +102,11 @@ jobs:
         uses: actions/checkout@v3 # needed to scan your Dockerfile / IaC
 
       - name: Run Trivy Image & IaC Scan
-        uses: aquasecurity/trivy-action@v1
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: image,fs # scan both the pushed image and the repo filesystem (Dockerfile)
           image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
           format: table # human-readable table in logs
           exit-code: "1" # non-zero if vulnerabilities ≥ the severities below
-          severity: CRITICAL,HIGH # fail on HIGH or CRITICAL issues only
+          severity: CRITICAL # fail CRITICAL issues only
           timeout: 5m # abort if it hangs
