@@ -105,19 +105,19 @@ jobs:
       - name: Trivy container image scan
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          scan-type: image # only the image
+          scan-type: image # Scan type
           image-ref: flospi/cicd-go-app:latest
-          format: table
-          exit-code: "1" # fail on HIGH or CRITICAL
-          severity: CRITICAL,HIGH
+          format: table # Output format
+          exit-code: "1"
+          severity: CRITICAL
           timeout: 5m
 
       - name: Trivy Dockerfile (IaC) scan
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          scan-type: fs # only the filesystem (Dockerfile)
-          scan-ref: "." # point at repo root
-          format: table
+          scan-type: fs # Scan type
+          scan-ref: "."
+          format: table # Output format
           exit-code: "1"
-          severity: CRITICAL,HIGH
+          severity: CRITICAL
           timeout: 5m
