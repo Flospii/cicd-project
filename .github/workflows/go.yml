@@ -92,3 +92,21 @@ jobs:
           TAG=${GITHUB_SHA::8}
           docker push $IMAGE_NAME:$TAG
           docker push $IMAGE_NAME:latest
+
+  trivy-scan:
+    name: Trivy Vulnerability Scan
+    runs-on: ubuntu-latest
+    needs: docker # wait until the image is built & pushed
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # needed to scan your Dockerfile / IaC
+
+      - name: Run Trivy Image & IaC Scan
+        uses: aquasecurity/trivy-action@v1
+        with:
+          scan-type: image,fs # scan both the pushed image and the repo filesystem (Dockerfile)
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha::8 }}
+          format: table # human-readable table in logs
+          exit-code: "1" # non-zero if vulnerabilities ≥ the severities below
+          severity: CRITICAL,HIGH # fail on HIGH or CRITICAL issues only
+          timeout: 5m # abort if it hangs
