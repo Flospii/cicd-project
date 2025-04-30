@@ -2,7 +2,7 @@ FROM golang:1.24-alpine
 
 WORKDIR /app
 
-# Copy all source files
+# Copy all source files 
 COPY . .
 
 # Build the binary
